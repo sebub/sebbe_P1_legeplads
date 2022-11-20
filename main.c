@@ -1,42 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <windows.h>
+#include <string.h>
 
-void convert_to_lowercase(char *str);
 
 int main() {
-    int co2 = 0, cost = 0, time = 0, remainder = 100;
 
-    while(remainder > 0) {
+    FILE *city_data = fopen("cities.txt","r");
+    if(city_data == NULL){
+        printf("file not found");
+    }
 
-        char input[5];
-        int value = 0;
-        printf("Env \tCost \tTime \tRemaining\n");
-        printf("%d \t%d \t%d \t%d\n", co2, cost, time, remainder);
+    char temp1[30];
+    char temp2[30];
+    char prev_city[30];
+    int distance, number_of_cities = 0;
+    char city_name_array[10][20];
 
-        scanf("%s \t%d",input, &value);
-        convert_to_lowercase(input);
-        if(strcmp(input,"env")==0)
-            co2 +=value;
-        else if(strcmp(input,"cost")==0)
-            cost += value;
-        else if(strcmp(input,"time")==0)
-            time += value;
-        else
-            printf("invalid input\n");
+    while(fscanf(city_data,"%s %s %d",temp1, temp2, &distance)==3){
+        printf("%s -> %s, is %dkm\n",temp1,temp2,distance);
 
-        remainder -= value;
-        //system("cls");
+        if(strcmp(temp1,prev_city) != 0) {
+            printf("\n\tNumber: %d City: %s\n", number_of_cities,temp1);
+            strcpy(city_name_array[number_of_cities],temp1);
+            number_of_cities++;
+        }
+        strcpy(prev_city,temp1);
+        printf("This is prev city:%s\n", prev_city);
+    };
 
+    printf("%d\n",number_of_cities);
+
+    for (int i = 0; i < number_of_cities; ++i) {
+        printf("*%s*\n",city_name_array[i]);
 
     }
-    return 0;
 
-}
 
-void convert_to_lowercase(char *str){//runs over every letter in the string and converts them to lowercase
-    for (int i = 0; i < strlen(str); ++i) {
-        str[i]= tolower(str[i]);
-    }
 }
