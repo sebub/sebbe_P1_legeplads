@@ -14,3 +14,4 @@ aalborg         saeby           54
 aalborg         norresundby     3
 aalborg         stovring        22
 stovring        aalborg         22
+stovring        null            0
