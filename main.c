@@ -5,13 +5,15 @@
 int find_number_of_cities();
 //void create_city_name_array(char city_name_array[20][20]);
 char** create_city_name_array(int number_of_cities);
+int** create_djikstra_array(int number_of_cities);
 
 int main() {
 
 
     int nr = find_number_of_cities();
     char** cityname = create_city_name_array(nr);
-    int** city_distance_array =
+    int** city_distance_array = create_djikstra_array(nr);
+
 
 
     for (int i = 0; i < nr; ++i) {
@@ -70,5 +72,20 @@ char** create_city_name_array(int number_of_cities){
 }
 
 int** create_djikstra_array(int number_of_cities){
-    
+    FILE *city_data = fopen("cities.txt","r");
+    if(city_data == NULL){
+        printf("file not found");
+    }
+
+    int **djikstra_array;
+    djikstra_array = malloc((number_of_cities * number_of_cities) * (sizeof(int)));
+
+    for (int i = 0; i < number_of_cities; ++i) {
+
+        for (int j = 0; j < number_of_cities; ++j) {
+            djikstra_array[i][j]=0;
+        }
+    }
+    return djikstra_array;
+
 }
