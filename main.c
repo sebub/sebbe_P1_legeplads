@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <stdbool.h>
 
-#define V 7
+
 int find_number_of_cities();
 char** create_city_name_array(int number_of_cities);
 int** create_djikstra_array(int number_of_cities);
@@ -12,12 +12,12 @@ int** create_djikstra_array(int number_of_cities);
 unsigned int hash_city_names_nondynamic(char* name);
 
 
-int minDistance(int dist[], bool sptSet[])
+int minDistance(int dist[], bool sptSet[],int number_of_cities)
 {
     // Initialize min value
     int min = INT_MAX, min_index;
 
-    for (int v = 0; v < V; v++)
+    for (int v = 0; v < number_of_cities; v++)
         if (sptSet[v] == false && dist[v] <= min)
             min = dist[v], min_index = v;
 
@@ -26,48 +26,48 @@ int minDistance(int dist[], bool sptSet[])
 
 // A utility function to print the constructed distance
 // array
-void printSolution(int dist[])
+void printSolution(int dist[], int number_of_cities)
 {
     printf("Vertex \t\t Distance from Source\n");
-    for (int i = 0; i < V; i++)
+    for (int i = 0; i < number_of_cities; i++)
         printf("%d \t\t\t\t %d\n", i, dist[i]);
 }
 
 // Function that implements Dijkstra's single source
 // shortest path algorithm for a graph represented using
 // adjacency matrix representation
-void dijkstra(int** graph, int src)
+void dijkstra(int** graph, int src, int number_of_cities)
 {
-    int dist[V]; // The output array.  dist[i] will hold the
+    int dist[number_of_cities]; // The output array.  dist[i] will hold the
     // shortest
     // distance from src to i
 
-    bool sptSet[V]; // sptSet[i] will be true if vertex i is
+    bool sptSet[number_of_cities]; // sptSet[i] will be true if vertex i is
     // included in shortest
     // path tree or shortest distance from src to i is
     // finalized
 
     // Initialize all distances as INFINITE and stpSet[] as
     // false
-    for (int i = 0; i < V; i++)
+    for (int i = 0; i < number_of_cities; i++)
         dist[i] = INT_MAX, sptSet[i] = false;
 
     // Distance of source vertex from itself is always 0
     dist[src] = 0;
 
     // Find shortest path for all vertices
-    for (int count = 0; count < V - 1; count++) {
+    for (int count = 0; count < number_of_cities - 1; count++) {
         // Pick the minimum distance vertex from the set of
         // vertices not yet processed. u is always equal to
         // src in the first iteration.
-        int u = minDistance(dist, sptSet);
+        int u = minDistance(dist, sptSet, number_of_cities);
 
         // Mark the picked vertex as processed
         sptSet[u] = true;
 
         // Update dist value of the adjacent vertices of the
         // picked vertex.
-        for (int v = 0; v < V; v++)
+        for (int v = 0; v < number_of_cities; v++)
 
             // Update dist[v] only if is not in sptSet,
             // there is an edge from u to v, and total
@@ -80,7 +80,7 @@ void dijkstra(int** graph, int src)
     }
 
     // print the constructed distance array
-    printSolution(dist);
+    printSolution(dist, number_of_cities);
 }
 
 
@@ -93,7 +93,7 @@ int main() {
     char** cityname = create_city_name_array(nr);
     int** city_distance_array = create_djikstra_array(nr);
 
-    dijkstra(city_distance_array,0);
+    dijkstra(city_distance_array,0,nr);
     for (int  i= 0; i < nr; ++i) {
         printf("\n");
         for (int j = 0; j < nr; ++j) {
