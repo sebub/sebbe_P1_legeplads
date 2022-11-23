@@ -7,8 +7,8 @@
 
 int find_number_of_cities();
 char** create_city_name_array(int number_of_cities);
-int** create_djikstra_array(int number_of_cities);
-//unsigned int hash_city_names(char* name);
+int** create_djikstra_array(int number_of_cities, char** city_name_array);
+unsigned int index_city_names(char* name, char** city_name_array, int num_cities);
 unsigned int hash_city_names_nondynamic(char* name);
 
 
@@ -88,10 +88,9 @@ void dijkstra(int** graph, int src, int number_of_cities)
 
 int main() {
 
-
     int nr = find_number_of_cities();
-    char** cityname = create_city_name_array(nr);
-    int** city_distance_array = create_djikstra_array(nr);
+    char** city_name = create_city_name_array(nr);
+    int** city_distance_array = create_djikstra_array(nr, city_name);
 
     dijkstra(city_distance_array,0,nr);
     for (int  i= 0; i < nr; ++i) {
@@ -102,7 +101,8 @@ int main() {
     }
 
     for (int i = 0; i < nr; ++i) {
-        printf("\n%s => %u\n",cityname[i], hash_city_names_nondynamic(cityname[i]));
+        printf("\n%s => %u\n",city_name[i],
+               index_city_names(city_name[i], city_name, nr));
     }
 }
 
@@ -143,16 +143,14 @@ char** create_city_name_array(int number_of_cities){
             citynames[index] = malloc((strlen(temp1)*sizeof(char)));
             strcpy(citynames[index],temp1);
             index++;
-
         }
         strcpy(prev_city,temp1);
     }
-
     fclose(city_data);
     return citynames;
 }
 
-int** create_djikstra_array(int number_of_cities){
+int** create_djikstra_array(int number_of_cities, char** city_name_array){
     FILE *city_data = fopen("cities.txt","r");
     if(city_data == NULL){
         printf("file not found");
@@ -174,9 +172,9 @@ int** create_djikstra_array(int number_of_cities){
     char temp2[20];
     int value = 0;
     while(fscanf(city_data,"%s %s %d",temp1,temp2,&value)==3){
-        djikstra_array[hash_city_names_nondynamic(temp1)][hash_city_names_nondynamic(temp2)]=value;
+        djikstra_array[index_city_names(temp1,city_name_array,number_of_cities)]
+                      [index_city_names(temp2, city_name_array, number_of_cities)]=value;
     }
-
     return djikstra_array;
 }
 
@@ -198,14 +196,11 @@ unsigned int hash_city_names_nondynamic(char* name){
     else return -1;
 }
 
-/*
-unsigned int hash_city_names(char* name){
-    int lenght = strlen(name);
-    unsigned int hash_val = 0;
-    for (int i = 0; i < lenght; ++i) {
-        hash_val += name[i];
-        hash_val = hash_val * name[i] % find_number_of_cities();
+unsigned int index_city_names(char* name, char** city_name_array, int num_cities){
+    for (int i = 0; i < num_cities; ++i) {
+        if (strcmp(name,city_name_array[i]) == 0){
+            return i;
+        }
     }
-    return hash_val;
-}*/
-
+    printf("index function error occurred\n");
+}
