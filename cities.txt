@@ -13,4 +13,6 @@ aalborg         frederikshavn   65
 aalborg         saeby           54
 aalborg         norresundby     3
 aalborg         stovring        22
+aalborg         nyby            100
 stovring        aalborg         22
+nyby            aalborg         100
